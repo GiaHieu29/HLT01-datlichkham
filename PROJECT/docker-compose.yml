@@ -1,0 +1,62 @@
+# Triển khai toàn bộ hệ thống bằng MỘT lệnh (NFR-07):
+#   (lần đầu) sao chép .env.example thành .env và điền mật khẩu
+#   docker compose up -d --build
+# Sau đó mở http://localhost:3000
+name: hlt01-full
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:?Chua co MSSQL_SA_PASSWORD - hay tao tep .env tu .env.example}"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: "${KC_ADMIN_PASSWORD:?Chua co KC_ADMIN_PASSWORD - hay tao tep .env tu .env.example}"
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak/hlt01-realm.json:/opt/keycloak/data/import/hlt01-realm.json:ro
+      - ./keycloak/themes/hlt:/opt/keycloak/themes/hlt:ro
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Hlt.Api/Dockerfile
+    depends_on:
+      - sqlserver
+      - keycloak
+    environment:
+      ConnectionStrings__Default: "Server=sqlserver,1433;Database=HLT01;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
+      Oidc__Authority: "http://keycloak:8080/realms/hlt01"
+      Oidc__MetadataAddress: "http://keycloak:8080/realms/hlt01/.well-known/openid-configuration"
+      Oidc__ValidIssuer: "http://localhost:8080/realms/hlt01"
+      Oidc__Audience: "hlt-web"
+      Cors__Origins__0: "http://localhost:3000"
+      SeedData: "true"
+    ports:
+      - "5080:8080"
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_URL: "http://localhost:5080"
+        VITE_OIDC_AUTHORITY: "http://localhost:8080/realms/hlt01"
+    depends_on:
+      - api
+    ports:
+      - "3000:80"
+
+volumes:
+  sqldata:

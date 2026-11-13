@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+*.user
+web/node_modules/
+web/dist/
+web/.env
+.env
+src/Hlt.Api/appsettings.Development.json
+*.pfx

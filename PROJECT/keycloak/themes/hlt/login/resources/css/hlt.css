@@ -1,0 +1,144 @@
+/* Trang đăng nhập / đăng ký – cùng màu và phông chữ với ứng dụng HLT */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+
+:root {
+  --pf-v5-global--FontFamily--text: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --pf-v5-global--FontFamily--heading: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --pf-v5-global--primary-color--100: #1f6f66;
+  --pf-v5-global--primary-color--200: #134c46;
+  --pf-v5-global--active-color--100: #1f6f66;
+  --pf-v5-global--link--Color: #1f6f66;
+  --pf-v5-global--link--Color--hover: #134c46;
+}
+
+html, body, .pf-v5-c-login {
+  background: radial-gradient(circle at 0 0, #e2efec 0, transparent 45%), #f3f6f5 !important;
+  font-family: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Tên phòng khám phía trên khung đăng nhập, kèm biểu tượng chữ thập */
+#kc-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #134c46;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+#kc-header-wrapper::before {
+  content: "+";
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #1f6f66;
+  color: #fff;
+  font-size: 30px;
+  line-height: 1;
+}
+
+/* Khung đăng nhập – viền trên màu xanh của app (thay màu xanh dương mặc định) */
+.pf-v5-c-login__main {
+  border-top: 4px solid #1f6f66 !important;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px -20px rgba(19, 76, 70, .35);
+  color: #17252c;
+}
+.pf-v5-c-login__main::before,
+.pf-v5-c-login__main::after {
+  background-color: #1f6f66 !important;
+  border-color: #1f6f66 !important;
+}
+
+/* Tiêu đề «Đăng nhập vào tài khoản» */
+#kc-page-title,
+.pf-v5-c-login__main-header .pf-v5-c-title {
+  color: #134c46 !important;
+  font-weight: 700;
+  font-size: 26px;
+}
+
+/* Nhãn ô nhập */
+.pf-v5-c-form__label,
+.pf-v5-c-form__label-text {
+  color: #17252c !important;
+  font-weight: 600;
+}
+
+/* Ô nhập: chữ đậm, viền xanh khi đang gõ */
+.pf-v5-c-form-control {
+  color: #17252c;
+  --pf-v5-c-form-control--after--BorderBottomColor: #dbe3e1;
+  --pf-v5-c-form-control--focus--after--BorderBottomColor: #1f6f66;
+  --pf-v5-c-form-control--hover--after--BorderBottomColor: #1f6f66;
+}
+
+/* Dòng chữ phụ «Bệnh nhân chưa có tài khoản?» và các dòng ghi chú */
+.pf-v5-c-login__main-footer-band,
+#kc-registration,
+#kc-registration span,
+.pf-v5-c-helper-text,
+.pf-v5-c-form__helper-text {
+  color: #51636a !important;
+}
+
+/* Liên kết «Đăng ký», «Quay lại đăng nhập» */
+.pf-v5-c-login__main a,
+#kc-registration a {
+  color: #1f6f66 !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+.pf-v5-c-login__main a:hover,
+#kc-registration a:hover {
+  color: #134c46 !important;
+  text-decoration: underline;
+}
+
+/* Thông báo lỗi (sai mật khẩu…) */
+.pf-v5-c-alert.pf-m-danger .pf-v5-c-alert__title,
+.pf-v5-c-helper-text__item.pf-m-error {
+  color: #c2412f !important;
+}
+
+.pf-v5-c-button.pf-m-primary {
+  border-radius: 10px;
+  font-weight: 600;
+  color: #fff !important;
+}
+
+/* Màu khi bôi đen chữ */
+::selection {
+  background: #e2efec;
+  color: #134c46;
+}
+
+/* ----- Sửa thêm: tên phòng khám bị trắng, viền trên còn xanh dương, ô nhập nền xanh do trình duyệt tự điền ----- */
+:root,
+.pf-v5-c-login__main {
+  --keycloak-card-top-color: #1f6f66;
+}
+#kc-header,
+#kc-header-wrapper,
+#kc-header-wrapper * {
+  color: #134c46 !important;
+  -webkit-text-fill-color: #134c46;
+}
+.pf-v5-c-login__main,
+.pf-v5-c-login__main-header {
+  border-top-color: #1f6f66 !important;
+}
+.pf-v5-c-login__main::before,
+.pf-v5-c-login__main::after {
+  background: #1f6f66 !important;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #17252c !important;
+}

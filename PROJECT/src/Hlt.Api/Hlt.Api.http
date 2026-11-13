@@ -1,0 +1,61 @@
+### Kiểm thử nhanh API bằng VS Code (REST Client)
+@api = http://localhost:5080
+@token_url = http://localhost:8080/realms/hlt01/protocol/openid-connect/token
+
+### 1. Lấy token bệnh nhân từ Keycloak
+# @name loginPatient
+POST {{token_url}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id=hlt-web&username=benhnhan1&password=123456
+
+### 2. Lấy token nhân viên
+# @name loginStaff
+POST {{token_url}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id=hlt-web&username=nhanvien1&password=123456
+
+### 3. Tôi là ai?
+GET {{api}}/api/me
+Authorization: Bearer {{loginPatient.response.body.$.access_token}}
+
+### 4. Danh sách khoa (không cần đăng nhập)
+GET {{api}}/api/departments
+
+### 5. Bác sĩ của khoa 1
+GET {{api}}/api/doctors?departmentId=1
+Authorization: Bearer {{loginPatient.response.body.$.access_token}}
+
+### 6. Khung giờ của bác sĩ 1 ngày mai (sửa ngày cho đúng)
+GET {{api}}/api/slots?doctorId=1&date=2026-11-04
+Authorization: Bearer {{loginPatient.response.body.$.access_token}}
+
+### 7. Đặt lịch (sửa slotId theo kết quả bước 6). Gửi lần 2 cùng slotId -> 409
+POST {{api}}/api/appointments
+Authorization: Bearer {{loginPatient.response.body.$.access_token}}
+Content-Type: application/json
+
+{ "slotId": 3, "reason": "Đau đầu, chóng mặt hai ngày" }
+
+### 8. Lịch hẹn của tôi
+GET {{api}}/api/appointments/mine
+Authorization: Bearer {{loginPatient.response.body.$.access_token}}
+
+### 9. Nhân viên xem lịch chờ xác nhận
+GET {{api}}/api/staff/appointments?status=Pending
+Authorization: Bearer {{loginStaff.response.body.$.access_token}}
+
+### 10. Nhân viên xác nhận lịch 1 với mức ưu tiên 2 (Khẩn)
+POST {{api}}/api/appointments/1/confirm
+Authorization: Bearer {{loginStaff.response.body.$.access_token}}
+Content-Type: application/json
+
+{ "priorityId": 2 }
+
+### 11. TC-06: bệnh nhân gọi API xác nhận -> 403
+POST {{api}}/api/appointments/1/confirm
+Authorization: Bearer {{loginPatient.response.body.$.access_token}}
+Content-Type: application/json
+
+{ "priorityId": 2 }
