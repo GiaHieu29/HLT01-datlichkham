@@ -7,4 +7,15 @@ web/dist/
 web/.env
 .env
 src/Hlt.Api/appsettings.Development.json
+*.pfxbin/
+obj/
+.vs/
+*.user
+web/node_modules/
+web/dist/
+web/.env
+
+# Bí mật: không đưa lên GitHub
+.env
+src/Hlt.Api/appsettings.Development.json
 *.pfx
